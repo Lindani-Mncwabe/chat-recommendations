@@ -4,17 +4,12 @@ FROM python:3.10-slim
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy the requirements file from the root directory of the project
+# Copy the requirements file and the project into the container
 COPY requirements.txt /app/
-
-# Copy the entire contents of the root directory into the container
 COPY . /app/
 
 # Set the environment variable for Google Application Credentials
-ENV GOOGLE_APPLICATION_CREDENTIALS="ayoba-credentials.json"
-
-# Set PYTHONPATH to include /app
-ENV PYTHONPATH="/app"
+ENV GOOGLE_APPLICATION_CREDENTIALS="/app/ayoba-recommendations-engine.json"
 
 # Install system dependencies required for building certain Python packages
 RUN apt-get update && apt-get install -y \
