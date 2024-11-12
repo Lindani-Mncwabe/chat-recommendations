@@ -1,4 +1,3 @@
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -31,4 +30,5 @@ spec:
         - name: gcp-sa-key
           secret:
             secretName: gcp-sa-key
-       
+        - name: log-volume
+          emptyDir: {}
