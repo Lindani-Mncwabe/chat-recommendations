@@ -4,12 +4,11 @@ FROM python:3.10-slim
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy the requirements file and the project into the container
+# Copy the requirements file from the root directory of the project
 COPY requirements.txt /app/
-COPY . /app/
 
-# Set the environment variable for Google Application Credentials
-ENV GOOGLE_APPLICATION_CREDENTIALS="/app/ayoba-recommendations-engine.json"
+# Copy all application code into the container
+COPY . /app/
 
 # Install system dependencies required for building certain Python packages
 RUN apt-get update && apt-get install -y \
@@ -25,6 +24,9 @@ EXPOSE 8000
 
 # Define environment variable for Flask
 ENV FLASK_APP=app.py
+
+# The credential file will be dynamically injected at runtime
+ENV GOOGLE_APPLICATION_CREDENTIALS="/app/ayoba-recommendations-engine.json"
 
 # Run app.py when the container launches
 CMD ["python", "app.py"]
