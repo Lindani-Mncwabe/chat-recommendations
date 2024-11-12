@@ -1,32 +1,26 @@
-# Use an official Python runtime as a parent image
-FROM python:3.10-slim  
+# Use the official Python 3.11 slim image as a base image
+FROM python:3.10-slim
 
-# Set the working directory in the container
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy the requirements file from the root directory of the project
-COPY requirements.txt /app/
-
-# Copy all application code into the container
-COPY . /app/
-
-# Install system dependencies required for building certain Python packages
+# Install build dependencies
 RUN apt-get update && apt-get install -y \
-    gcc \
     build-essential \
+    gfortran \
     && rm -rf /var/lib/apt/lists/*
 
-# Install the dependencies from requirements.txt
+# Copy the requirements file first
+COPY requirements.txt /app/
+
+# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Make port 8000 available to the world outside this container
+# Copy the rest of the application code
+COPY . /app/
+
+# Expose the port the app runs on
 EXPOSE 8000
 
-# Define environment variable for Flask
-ENV FLASK_APP=app.py
-
-# The credential file will be dynamically injected at runtime
-ENV GOOGLE_APPLICATION_CREDENTIALS="/app/ayoba-recommendations-engine.json"
-
-# Run app.py when the container launches
-CMD ["python", "app.py"]
+# Command to run the application
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "app:app"]
