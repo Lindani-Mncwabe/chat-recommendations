@@ -33,13 +33,20 @@ stream_handler.setFormatter(log_formatter)
 app.logger.addHandler(stream_handler)  
 app.logger.setLevel(logging.INFO)
 
-# Initialize BigQuery client
+# Set environment variable GOOGLE_APPLICATION_CREDENTIALS
+google_credentials_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+
+if not google_credentials_path:
+    raise EnvironmentError("GOOGLE_APPLICATION_CREDENTIALS environment variable not set")
+
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = google_credentials_path
+
+# Initialize the BigQuery client
+client = None
 try:
-    bq_client = bigquery.Client()  # Automatically uses GOOGLE_APPLICATION_CREDENTIALS
-    app.logger.info("BigQuery client initialized successfully.")
+    client = bigquery.Client()
 except Exception as e:
-    app.logger.error(f"Error initializing BigQuery client: {e}")
-    bq_client = None
+    logging.error("Error initializing BigQuery client: %s", e)
 
 # Define Flask routes
 @app.route('/')
