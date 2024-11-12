@@ -33,6 +33,13 @@ stream_handler.setFormatter(log_formatter)
 app.logger.addHandler(stream_handler)  
 app.logger.setLevel(logging.INFO)
 
+# Initialize BigQuery client
+try:
+    bq_client = bigquery.Client()  # Automatically uses GOOGLE_APPLICATION_CREDENTIALS
+    app.logger.info("BigQuery client initialized successfully.")
+except Exception as e:
+    app.logger.error(f"Error initializing BigQuery client: {e}")
+    bq_client = None
 
 # Define Flask routes
 @app.route('/')
