@@ -5,7 +5,7 @@ import logging
 from flasgger import Swagger
 import os
 from sklearn.preprocessing import StandardScaler
-import src.utils as utils
+#import src.utils as utils
 from google.cloud import bigquery
 
 import io
