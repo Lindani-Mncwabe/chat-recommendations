@@ -179,7 +179,7 @@ def predict_datapoint():
             query_parameters=[bigquery.ArrayQueryParameter("user_ids", "STRING", user_ids)]
         )
         
-        query_job = utils.bigquery_client().query(query, job_config=job_config)
+        query_job = client.query(query, job_config=job_config)
         records = [dict(row) for row in query_job]
 
         if not records:
