@@ -1,0 +1,44 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: games-recom-test
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: games-recom-test
+  template:
+    metadata:
+      labels:
+        app: games-recom-test
+    spec:
+      containers:
+        - name: games-recom-test
+          image: us-central1-docker.pkg.dev/ayoba-183a7/gcf-artifacts/games-recom-test:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DATADOG_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: datadog-secret
+                  key: api-key
+            - name: DATADOG_APP_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: datadog-secret
+                  key: app-key
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /var/secrets/google/key.json
+          volumeMounts:
+            - name: gcp-sa-key
+              mountPath: /var/secrets/google
+              readOnly: true
+            - name: log-volume
+              mountPath: /app/logs
+      volumes:
+        - name: gcp-sa-key
+          secret:
+            secretName: gcp-sa-key
+       
