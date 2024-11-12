@@ -14,10 +14,10 @@ spec:
         app: chat-recoms
     spec:
       containers:
-        - name:chat-recoms
+        - name: chat-recoms
           image: us-central1-docker.pkg.dev/ayoba-183a7/gcf-artifacts/chat-recoms:latest
           ports:
-            - containerPort: 8080
+            - containerPort: 8000
           env:
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: /var/secrets/google/key.json
